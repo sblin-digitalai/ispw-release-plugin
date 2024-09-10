@@ -31,10 +31,11 @@ class HttpClient(object):
         headers = {'Authorization': '%s' % self.token}
         headers.update(additional_headers)
         params = {'url':self.url, 'type': 'application/json'}
-        return HttpRequest(params).get(context_root, contentType='application/json', headers=headers)
+        return HttpRequest(params).get(context=context_root, contentType='application/json', headers=headers)
 
     def _post_request(self, context_root, content, additional_headers=None):
         params = {'url':self.url, 'type': 'application/json'}
         headers = {'Authorization': '%s' % self.token}
         headers.update(additional_headers)
-        return HttpRequest(params).post(context_root,content=content, contentType='application/json', headers=headers)
+        
+        return HttpRequest(params).post(context=context_root, body=content, contentType='application/json', headers=headers)
