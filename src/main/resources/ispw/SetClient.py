@@ -31,7 +31,7 @@ class SetClient(HttpClient):
                 break
             else:
                 print("Call for 'get set information' returned 409(conflict), trying again - %s" % str(x+1))
-        return response.json()
+        return response.getResponse()
 
     def poll_get_set_information(self, srid, set_id, poll_interval, poll_timeout_count, status_field_name, expected_status_list):
         logger.debug("pollGetSetInfo - srid = %s, set_id = %s, poll_interval = %s, poll_timeout_count = %s, status_field_name = %s, _list = %s," % 
@@ -70,7 +70,7 @@ class SetClient(HttpClient):
             else:
                 print("Call for 'get set task list' returned 409(conflict), trying again - %s" % str(x+1))
         
-        return response.json()
+        return response.getResponse()
 
     def get_set_deployment_information(self, srid, set_id, retryInterval, retryLimit):
         context_root = "/ispw/%s/sets/%s/deployment" % (srid, set_id)
@@ -135,4 +135,4 @@ class SetClient(HttpClient):
             else:
                 print("Call for 'fallback set' returned 409(conflict), trying again - %s" % str(x+1))
         
-        return response.json()
+        return response.getResponse()

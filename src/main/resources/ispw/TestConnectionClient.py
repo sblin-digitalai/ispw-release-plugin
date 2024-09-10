@@ -19,8 +19,8 @@ class TestConnectionClient(HttpClient):
         response = self._get_request(context_root, {'Accept': 'application/json'})
         if not response.ok:
             raise Exception("Failed to get version information [%s]. Server return [%s], with content [%s]" % (
-            path, response.status_code, response.text))
+            path, response.getStatus(), response.errorDump()))
 
         print ("Received version info for path [%s]. Server return [%s], with content [%s]\n" % (
-            path, response.status_code, response.json()))
-        return response.json()
+            path, response.status_code, response.getResponse()))
+        return response.getResponse()

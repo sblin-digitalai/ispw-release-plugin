@@ -31,7 +31,7 @@ class ReleaseClient(HttpClient):
             else:
                 print("Call for 'create release' returned 409(conflict), trying again - %s" % str(x+1))
 
-        return response.json()
+        return response.getResponse()
 
     def get_release_information(self, srid, release_id, retryInterval, retryLimit):
         context_root = "/ispw/%s/releases/%s" % (srid, release_id)
@@ -40,7 +40,7 @@ class ReleaseClient(HttpClient):
         for x in range(retryLimit):
             response = self._get_request(context_root, {'Accept': 'application/json'})
             logger.debug("isLastCall? - %s, x - %d, retryLimt - %d " % ((x >= retryLimit-1), x, retryLimit))
-            logger.debug("response returned - %s, %s, about to run check response" % (str(response.status_code), str(response.text)))
+            logger.debug("response returned - %s, %s, about to run check response" % (str(response.getStatus()), str(response.errorDump())))
             if check_response(response, retryInterval, (x >= retryLimit-1), srid, "get release"):
                 logger.debug("About to break, check response was true")
                 break
@@ -48,7 +48,7 @@ class ReleaseClient(HttpClient):
                 logger.debug("in for loop, check reponse returned false, about to try again, range is %s" % str(range(retryLimit)))
                 print("Call for 'get release' returned 409(conflict), trying again - %s" % str(x+1))
 
-        return response.json()
+        return response.getResponse()
 
     def get_release_task_list(self, srid, release_id, level, retryInterval, retryLimit):
         context_root = "/ispw/%s/releases/%s/tasks" % (srid, release_id)
@@ -63,7 +63,7 @@ class ReleaseClient(HttpClient):
             else:
                 print("Call for 'get release task list' returned 409(conflict), trying again - %s" % str(x+1))
 
-        return response.json()
+        return response.getResponse()
 
 
     def get_release_task_information(self, srid, release_id, task_id, retryInterval, retryLimit):
@@ -78,7 +78,7 @@ class ReleaseClient(HttpClient):
             else:
                 print("Call for 'get release task information' returned 409(conflict), trying again - %s" % str(x+1))
 
-        return response.json()
+        return response.getResponse()
 
 
     def generate_tasks_in_release(self, srid, release_id, level, runtime_configuration, auto_deploy, callback_task_id,
@@ -109,7 +109,7 @@ class ReleaseClient(HttpClient):
             else:
                 print("Call for 'generate tasks for release' returned 409(conflict), trying again - %s" % str(x+1))
             
-        return response.json()
+        return response.getResponse()
 
 
     def get_release_task_generate_listing(self, srid, release_id, task_id, retryInterval, retryLimit):
@@ -124,7 +124,7 @@ class ReleaseClient(HttpClient):
             else:
                 print("Call for 'get release tasks generate listing' returned 409(conflict), trying again - %s" % str(x+1))
 
-        return response.json()
+        return response.getResponse()
 
 
     def promote(self, srid, release_id, level, change_type, execution_status, runtime_configuration, override, auto_deploy,
@@ -156,7 +156,7 @@ class ReleaseClient(HttpClient):
             else:
                 print("Call for 'promote release' returned 409(conflict), trying again - %s" % str(x+1))
 
-        return response.json()
+        return response.getResponse()
 
     def deploy(self, srid, release_id, level, change_type, execution_status, runtime_configuration, dpenvlst, system,
                callback_task_id, callback_url, callback_username, callback_password, retryInterval, retryLimit):
@@ -185,7 +185,7 @@ class ReleaseClient(HttpClient):
             else:
                 print("Call for 'deploy release' returned 409(conflict), trying again - %s" % str(x+1))
 
-        return response.json()
+        return response.getResponse()
 
 
     def regress(self, srid, release_id, level, change_type, execution_status, runtime_configuration, callback_task_id,
@@ -214,4 +214,4 @@ class ReleaseClient(HttpClient):
             else:
                 print("Call for 'regress release' returned 409(conflict), trying again - %s" % str(x+1))
 
-        return response.json()
+        return response.getResponse()

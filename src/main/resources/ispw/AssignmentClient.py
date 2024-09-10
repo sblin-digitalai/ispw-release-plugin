@@ -38,7 +38,7 @@ class AssignmentClient(HttpClient):
             else:
                 print("Call for 'create assignment' returned 409(conflict), trying again - %s" % str(x+1))
 
-        return response.json()
+        return response.getContent()
 
 
     def load_task(self, srid, assignment_id, stream, application, module_name, module_type, current_level, starting_level,
@@ -63,7 +63,7 @@ class AssignmentClient(HttpClient):
             else:
                 print("Call for 'load task' returned 409(conflict), trying again - %s" % str(x+1))
 
-        return response.json()
+        return response.getResponse()
 
 
     def get_assignment_information(self, srid, assignment_id, retryInterval, retryLimit):
@@ -78,7 +78,7 @@ class AssignmentClient(HttpClient):
             else:
                 print("Call for 'get assignment information' returned 409(conflict), trying again - %s" % str(x+1))
 
-        return response.json()
+        return response.getResponse()
 
 
     def get_assignment_task_list(self, srid, assignment_id, level, retryInterval, retryLimit):
@@ -95,7 +95,7 @@ class AssignmentClient(HttpClient):
             else:
                 print("Call for 'get assignment task list' returned 409(conflict), trying again - %s" % str(x+1))
 
-        return response.json()
+        return response.getResponse()
 
 
     def get_assignment_task_information(self, srid, assignment_id, task_id, retryInterval, retryLimit):
@@ -110,7 +110,7 @@ class AssignmentClient(HttpClient):
             else:
                 print("Call for 'get release task information' returned 409(conflict), trying again - %s" % str(x+1))
 
-        return response.json()
+        return response.getResponse()
 
 
     def generate_tasks_in_assignment(self, srid, assignment_id, level, runtime_configuration, auto_deploy, callback_task_id,
@@ -140,7 +140,7 @@ class AssignmentClient(HttpClient):
             else:
                 print("Call for 'generate tasks' returned 409(conflict), trying again - %s" % str(x+1))
 
-        return response.json()
+        return response.getResponse()
 
 
     def promote_assignment(self, srid, assignment_id, level, change_type, execution_status, runtime_configuration, override, auto_deploy,
@@ -170,7 +170,7 @@ class AssignmentClient(HttpClient):
             else:
                 print("Call for 'promote assignment' returned 409(conflict), trying again - %s" % str(x+1))
 
-        return response.json()
+        return response.getResponse()
 
 
     def deploy_assignment(self, srid, assignment_id, level, change_type, execution_status, runtime_configuration, dpenvlst, system,
@@ -199,7 +199,7 @@ class AssignmentClient(HttpClient):
             else:
                 print("Call for 'deploy assignment' returned 409(conflict), trying again - %s" % str(x+1))
 
-        return response.json()
+        return response.getResponse()
 
 
     def regress_assignment(self, srid, assignment_id, level, change_type, execution_status, runtime_configuration, callback_task_id,
@@ -226,4 +226,4 @@ class AssignmentClient(HttpClient):
             else:
                 print("Call for 'regress assignment' returned 409(conflict), trying again - %s" % str(x+1))
 
-        return response.json()
+        return response.getResponse()

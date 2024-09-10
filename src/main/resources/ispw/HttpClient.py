@@ -8,7 +8,7 @@
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-import requests
+from xlrelease.HttpRequest import HttpRequest
 
 class HttpClient(object):
     def __init__(self, http_connection, ces_token=None):
@@ -28,13 +28,13 @@ class HttpClient(object):
             TrustAllCertificates.trust_all_certificates()
 
     def _get_request(self, context_root, additional_headers=None):
-        request_url = self.url + context_root
         headers = {'Authorization': '%s' % self.token}
         headers.update(additional_headers)
-        return requests.get(request_url, headers=headers, proxies=self.proxy, verify=self.verify_ssl)
+        params = {'url':self.url, 'type': 'application/json'}
+        return HttpRequest(params).get(context_root, contentType='application/json', headers=headers)
 
     def _post_request(self, context_root, content, additional_headers=None):
-        request_url = self.url + context_root
+        params = {'url':self.url, 'type': 'application/json'}
         headers = {'Authorization': '%s' % self.token}
         headers.update(additional_headers)
-        return requests.post(request_url, headers=headers, proxies=self.proxy, verify=self.verify_ssl, data=content)
+        return HttpRequest(params).post(context_root,content=content, contentType='application/json', headers=headers)

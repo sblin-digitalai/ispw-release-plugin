@@ -67,6 +67,7 @@ class ISPWClient(object):
                                                                level=variables['level'],
                                                                retryInterval=variables['retryInterval'],
                                                                retryLimit=variables['retryLimit'])
+        result = json.loads(result)
         processed_result = {}
         for item in result["tasks"]:
             task_id = item['taskId']
