@@ -253,7 +253,7 @@
     <property name="owner" category="input" label="Owner" kind="string" required="false"/>
     <property name="referenceNumber" category="input" label="Reference Number" kind="string" required="false"/>
 
-    <property name="relOutputId" category="output" label="Release id" kind="string"/>
+    <property name="releaseId" category="output" label="Release id" kind="string"/>
     <property name="url" category="output" label="Url" kind="string"/>
   </type>
 
@@ -263,7 +263,7 @@
               description="8 character value, the release ID you want information on."
               required="true"/>
 
-    <property name="relOutputId" category="output" label="Release id" kind="string"/>
+    <property name="releaseId" category="output" label="Release id" kind="string"/>
     <property name="application" category="output" label="Application" kind="string"/>
     <property name="stream" category="output" label="Stream" kind="string"/>
     <property name="description" category="output" label="Release description" kind="string"/>

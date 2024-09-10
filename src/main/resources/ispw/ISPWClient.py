@@ -36,6 +36,7 @@ class ISPWClient(object):
                                                           release_id=variables['relId'], user_tag=variables['userTag'],
                                                           retryInterval=variables['retryInterval'],
                                                           retryLimit=variables['retryLimit'])
+        result = json.loads(result)
         variables['assignmentId'] = result["assignmentId"]
         variables['url'] = result["url"]
 
@@ -52,6 +53,7 @@ class ISPWClient(object):
                                                   cics=variables['cics'], program=variables['program'],
                                                   retryInterval=variables['retryInterval'],
                                                   retryLimit=variables['retryLimit'])
+        result = json.loads(result)
         for key, value in result.iteritems():
             variables[key] = value
 
@@ -59,6 +61,7 @@ class ISPWClient(object):
         result = self.assignment_client.get_assignment_information(srid=variables['srid'], assignment_id=variables['assignmentId'],
                                              retryInterval=variables['retryInterval'],
                                              retryLimit=variables['retryLimit'])
+        result = json.loads(result)
         for key, value in result.iteritems():
             variables[key] = value
 
@@ -79,6 +82,7 @@ class ISPWClient(object):
                                                                   task_id=variables['taskId'],
                                                                   retryInterval=variables['retryInterval'],
                                                                   retryLimit=variables['retryLimit'])
+        result = json.loads(result)
         for key, value in result.iteritems():
             if key == "taskId":
                 variables["taskOutputId"] = value
@@ -98,6 +102,7 @@ class ISPWClient(object):
                                                                callback_password=variables['callbackPassword'],
                                                                retryInterval=variables['retryInterval'],
                                                                retryLimit=variables['retryLimit'])
+        result = json.loads(result)
         variables['setId'] = result["setId"]
         variables['url'] = result["url"]
 
@@ -115,6 +120,7 @@ class ISPWClient(object):
                                              callback_password=variables['callbackPassword'],
                                              retryInterval=variables['retryInterval'],
                                              retryLimit=variables['retryLimit'])
+        result = json.loads(result)
         variables['setId'] = result["setId"]
         variables['url'] = result["url"]
 
@@ -132,6 +138,7 @@ class ISPWClient(object):
                                             callback_password=variables['callbackPassword'],
                                             retryInterval=variables['retryInterval'],
                                             retryLimit=variables['retryLimit'])
+        result = json.loads(result)
         variables['setId'] = result["setId"]
         variables['url'] = result["url"]
 
@@ -147,6 +154,7 @@ class ISPWClient(object):
                                              callback_password=variables['callbackPassword'],
                                              retryInterval=variables['retryInterval'],
                                              retryLimit=variables['retryLimit'])
+        result = json.loads(result)
         variables['setId'] = result["setId"]
         variables['url'] = result["url"]
 
@@ -160,14 +168,16 @@ class ISPWClient(object):
                                                     reference_number=variables['referenceNumber'],
                                                     retryInterval=variables['retryInterval'],
                                                     retryLimit=variables['retryLimit'])
-        variables['relOutputId'] = result["releaseId"]
+        result = json.loads(result)
+        variables['releaseId'] = result["releaseId"]
         variables['url'] = result["url"]
 
     def ispwservices_getreleaseinformation(self, variables):
         result = self.release_client.get_release_information(srid=variables['srid'], release_id=variables['relId'],
                                              retryInterval=variables['retryInterval'],
                                              retryLimit=variables['retryLimit'])
-        variables['relOutputId'] = result["releaseId"]
+        result = json.loads(result)
+        variables['releaseId'] = result["releaseId"]
         variables['application'] = result["application"]
         variables['stream'] = result["stream"]
         variables['description'] = result["description"]
@@ -180,6 +190,7 @@ class ISPWClient(object):
                                                            retryInterval=variables['retryInterval'],
                                                            retryLimit=variables['retryLimit'])
         processed_result = {}
+        result = json.loads(result)
         for item in result["tasks"]:
             task_id = item['taskId']
             processed_result[task_id] = json.dumps(item)
@@ -190,6 +201,7 @@ class ISPWClient(object):
                                                                   task_id=variables['taskId'],
                                                                   retryInterval=variables['retryInterval'],
                                                                   retryLimit=variables['retryLimit'])
+        result = json.loads(result)
         for key, value in result.iteritems():
             if key == "taskId":
                 variables["taskOutputId"] = value
@@ -209,6 +221,7 @@ class ISPWClient(object):
                                                                callback_password=variables['callbackPassword'],
                                                                retryInterval=variables['retryInterval'],
                                                                retryLimit=variables['retryLimit'])
+        result = json.loads(result)
         variables['setId'] = result["setId"]
         variables['url'] = result["url"]
 
@@ -218,6 +231,7 @@ class ISPWClient(object):
                                                                        task_id=variables['taskId'],
                                                                        retryInterval=variables['retryInterval'],
                                                                        retryLimit=variables['retryLimit'])
+        result = json.loads(result)
         variables['listing'] = result["listing"]
 
     def ispwservices_promote(self, variables):
@@ -234,6 +248,7 @@ class ISPWClient(object):
                                              callback_password=variables['callbackPassword'],
                                              retryInterval=variables['retryInterval'],
                                              retryLimit=variables['retryLimit'])
+        result = json.loads(result)
         variables['setId'] = result["setId"]
         variables['url'] = result["url"]
 
@@ -251,6 +266,7 @@ class ISPWClient(object):
                                             callback_password=variables['callbackPassword'],
                                              retryInterval=variables['retryInterval'],
                                              retryLimit=variables['retryLimit'])
+        result = json.loads(result)
         variables['setId'] = result["setId"]
         variables['url'] = result["url"]
 
@@ -266,6 +282,7 @@ class ISPWClient(object):
                                              callback_password=variables['callbackPassword'],
                                              retryInterval=variables['retryInterval'],
                                              retryLimit=variables['retryLimit'])
+        result = json.loads(result)
         variables['setId'] = result["setId"]
         variables['url'] = result["url"]
 
@@ -273,6 +290,7 @@ class ISPWClient(object):
         result = self.set_client.get_set_information(srid=variables['srid'], set_id=variables['setId'],
                                              retryInterval=variables['retryInterval'],
                                              retryLimit=variables['retryLimit'])
+        result = json.loads(result)
         variables['setOutputId'] = result["setid"]
         variables['application'] = result["applicationId"]
         variables['stream'] = result["streamName"]
@@ -292,6 +310,7 @@ class ISPWClient(object):
                                              poll_timeout_count=variables['pollTimeoutCount'],
                                              status_field_name=variables['statusFieldName'],
                                              expected_status_list=variables['expectedStatusList'])
+        result = json.loads(result)
 
         variables['statusResult'] = result["status"]
 
@@ -299,6 +318,7 @@ class ISPWClient(object):
         result = self.set_client.get_set_task_list(srid=variables['srid'], set_id=variables['setId'],
                                              retryInterval=variables['retryInterval'],
                                              retryLimit=variables['retryLimit'])
+        result = json.loads(result)
         processed_result = {}
         for item in result["tasks"]:
             task_id = item['taskId']
@@ -309,6 +329,7 @@ class ISPWClient(object):
         result = self.set_client.get_set_deployment_information(srid=variables['srid'], set_id=variables['setId'],
                                              retryInterval=variables['retryInterval'],
                                              retryLimit=variables['retryLimit'])
+        result = json.loads(result)
         variables["createDate"] = result["createDate"]
         variables['description'] = result["description"]
         variables['environment'] = result["environment"]
@@ -323,6 +344,7 @@ class ISPWClient(object):
                                              poll_timeout_count=variables['pollTimeoutCount'],
                                              status_field_name=variables['statusFieldName'],
                                              expected_status_list=variables['expectedStatusList'])
+        result = json.loads(result)
 
         variables['statusResult'] = result["status"]
 
@@ -337,5 +359,6 @@ class ISPWClient(object):
                                               callback_password=variables['callbackPassword'],
                                               retryInterval=variables['retryInterval'],
                                               retryLimit=variables['retryLimit'])
+        result = json.loads(result)
         variables['setOutputId'] = result["setId"]
         variables['url'] = result["url"]

@@ -30,7 +30,6 @@ class ReleaseClient(HttpClient):
                 break
             else:
                 print("Call for 'create release' returned 409(conflict), trying again - %s" % str(x+1))
-
         return response.getResponse()
 
     def get_release_information(self, srid, release_id, retryInterval, retryLimit):
