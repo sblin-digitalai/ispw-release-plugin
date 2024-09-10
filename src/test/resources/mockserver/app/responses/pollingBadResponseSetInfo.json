@@ -1,0 +1,14 @@
+{
+  "owner": "xebia",
+  "deployActiveDate": "09/10/2020",
+  "deployImplementationDate": "10/10/2020",
+  "deployActiveTime": "11am",
+  "description": "something",
+  "deployImplementationTime": "11am",
+  "streamName": "stream",
+  "setid": "someId",
+  "startTime": "11am",
+  "state": "UNDEFINED",
+  "applicationId": "app",
+  "startDate": "08/10/2020"
+}

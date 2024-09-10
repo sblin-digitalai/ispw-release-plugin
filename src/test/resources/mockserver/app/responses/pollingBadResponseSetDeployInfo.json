@@ -1,0 +1,18 @@
+{
+    "createDate": "2017-08-18",
+    "description": "MyGen",
+    "environment": "FOOENV",
+    "packages": {
+      "packageId": 1,
+      "subEnvironment": "DEVL",
+      "system": "MP3000",
+      "deploymentItems": {
+        "item": 1,
+        "part": 5161,
+        "name": "TSUBR05"
+      }
+    },
+    "requestId": 3193,
+    "setId": "S0000009884",
+    "status": "Undefined"
+  }

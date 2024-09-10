@@ -1,0 +1,34 @@
+plugins {
+  id "com.github.hierynomus.license" version "0.14.0"
+  id 'nebula.release' version '6.0.0'
+}
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'eclipse'
+apply plugin: 'maven'
+
+version = "3.9.1"
+
+if (!project.hasProperty('release.scope')) {
+  project.ext['release.scope'] = 'patch'
+}
+
+if (!project.hasProperty('release.useLastTag')) {
+  project.ext['release.useLastTag'] = true
+}
+
+if (!project.hasProperty('jythonInterpreter')) {
+  project.ext['jythonInterpreter'] = "jython"
+}
+
+sourceSets.main.resources.srcDirs = ["src/main/jython", "src/main/resources"]
+sourceSets.test.resources.srcDirs = ["src/test/jython", "src/test/resources"]
+
+license {
+  header rootProject.file('License.md')
+  strictCheck false
+  excludes(["**/*.png",  "**/*.txt", "**/*.json", "**/*.pyc", "**/*.yml", "**/*.yaml", "**/*.properties", "**/*.xml"])
+  ext.year = Calendar.getInstance().get(Calendar.YEAR)
+  ext.name = 'XEBIALABS'
+}

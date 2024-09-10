@@ -1,0 +1,503 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+
+    Copyright 2021 XEBIALABS
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+-->
+
+<synthetic xmlns="http://www.xebialabs.com/deployit/synthetic" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://www.xebialabs.com/deployit/synthetic synthetic.xsd">
+
+  <type type="ispwServices.Server" extends="configuration.HttpConnection">
+    <property name="cesToken" kind="string" required="false" label="Authentication token"/>
+    <property name="username" hidden="true" default="username"/>
+    <property name="password" hidden="true" default="password"/>
+    <property name="enableSslVerification" label="SSL Verification" required="false" default="true" kind="boolean"
+              description="Enable SSL Verification"/>
+
+    <property name="scriptLocation" hidden="true" default="ispw/HttpConnectionCheck.py"/>
+    <property name="checkConfigurationPath" hidden="true" default="/compuware/ws/Config/version"/>
+  </type>
+
+  <type type="ispwServices.PythonScript" extends="xlrelease.PythonScript" virtual="true">
+    <property name="scriptLocation" default="ispw/ISPWTask.py" hidden="true"/>
+    <property name="iconLocation" default="ispw/compuware.png" hidden="true"/>
+    <property name="ispwServiceServer" category="input" label="Server" referenced-type="ispwServices.Server"
+              kind="ci"/>
+    <property name="cesToken" category="input" kind="string" required="false" label="Authentication token"/>
+    <property name="srid" category="input" kind="string" required="true" label="srid"
+              description="The instance of ISPW you are working with."/>
+    <property name="retryLimit" category="input" label="Retry Limit" kind="integer" 
+              description="Number of times to retry the task before failing, in the case that a 409 response status is returned" required="true" default="0"/>
+    <property name="retryInterval" category="input" label="Retry Interval (sec)" kind="integer" 
+              description="Number of seconds to wait for retries" required="true" default="0"/>
+  </type>
+
+  <type type="ispwServices.Poll" extends="xlrelease.PythonScript" virtual="true">
+    <property name="scriptLocation" default="ispw/ISPWTask.py" hidden="true"/>
+    <property name="iconLocation" default="ispw/compuware.png" hidden="true"/>
+    <property name="ispwServiceServer" category="input" label="Server" referenced-type="ispwServices.Server"
+              kind="ci"/>
+    <property name="cesToken" category="input" kind="string" required="false" label="Authentication token"/>
+    <property name="srid" category="input" kind="string" required="true" label="srid"
+              description="The instance of ISPW you are working with."/>
+    <property name="pollInterval" category="input" kind="integer" description="Time in seconds between each polling action" default="15" />
+    <property name="pollTimeoutCount" category="input" kind="integer" description="Number of times to poll before declaring a timeout failure, must be 1 or greater" default="1" 
+        label="Number of times to poll before timeout failure"/>
+    <property name="expectedStatusList" category="input" kind="list_of_string"  description="List one or more expected values for the 'state' field" default=""/>
+    
+    <property name="statusResult" category="output" kind="string" description="The expected status that was returned" label="Final Retrieved Status" />
+  </type>
+
+  <type type="ispwServices.Action" extends="ispwServices.PythonScript" virtual="true">
+    <property name="runtimeConfiguration" category="input" label="Runtime Configuration" kind="string"
+              description="See ISPW administrator for valid values" required="false"/>
+    <property name="callbackTaskId" category="input" label="Callback Task Id" kind="string"
+              description="Manual task used for callback" required="true"/>
+    <property name="callbackUrl" category="input" label="Callback Url" kind="string"
+              description="XLR base url used for callback" required="true"/>
+    <property name="callbackUsername" category="input" label="Callback Username" kind="string"
+              description="XLR username used for callback" required="true"/>
+    <property name="callbackPassword" password="true" category="input" label="Callback Password" kind="string"
+              description="XLR password used for callback" required="true"/>
+  </type>
+  
+
+  <!-- Assignments -->
+  <type type="ispwServices.CreateAssignment" extends="ispwServices.PythonScript"
+        label="ISPW Assignments: Create Assignment">
+    <property name="stream" category="input" label="Stream" kind="string"/>
+    <property name="application" category="input" label="Application" kind="string"/>
+    <property name="defaultPath" category="input" label="Default path" kind="string"/>
+    <property name="description" category="input" label="Assignment description" kind="string"/>
+    <property name="owner" category="input" label="Owner" kind="string" required="true"/>
+    <property name="assignmentPrefix" category="input" label="Assignment prefix" kind="string" required="true"/>
+
+    <property name="referenceNumber" category="input" label="Reference number" kind="string" required="false"/>
+    <property name="relId" category="input" label="Release id" kind="string" required="false"/>
+    <property name="userTag" category="input" label="User tag" kind="string" required="false"/>
+
+    <property name="assignmentId" category="output" label="Assignment id" kind="string"/>
+    <property name="url" category="output" label="Url" kind="string"/>
+  </type>
+
+  <type type="ispwServices.LoadTask" extends="ispwServices.PythonScript"
+        label="ISPW Assignments: Load Task">
+    <property name="assignmentId" category="input" label="Assignment id" kind="string"/>
+    <property name="stream" category="input" label="Stream" kind="string"/>
+    <property name="application" category="input" label="Application" kind="string"/>
+    <property name="moduleName" category="input" label="Module name" kind="string"/>
+    <property name="moduleType" category="input" label="Module type" kind="string"/>
+    <property name="currentLevel" category="input" label="Current level" kind="string"/>
+    <property name="startingLevel" category="input" label="Starting level" kind="string"/>
+
+    <property name="generateSequence" category="input" label="Generate sequence" kind="string" required="false"/>
+    <property name="sql" category="input" label="SQL" kind="boolean" required="false"/>
+    <property name="ims" category="input" label="IMS" kind="boolean" required="false"/>
+    <property name="cics" category="input" label="CICS" kind="boolean" required="false"/>
+    <property name="program" category="input" label="Program" kind="boolean" required="false"/>
+
+    <property name="assignmentOutputId" category="output" label="Assignment id" kind="string"/>
+    <property name="url" category="output" label="Url" kind="string"/>
+  </type>
+
+  <type type="ispwServices.GetAssignmentInformation" extends="ispwServices.PythonScript"
+        label="ISPW Assignments: Get Assignment Information">
+    <property name="assignmentId" category="input" label="Assignment id" kind="string"/>
+    <property name="stream" category="input" label="Stream" kind="string"/>
+
+    <property name="application" category="output" label="Application" kind="string"/>
+    <property name="defaultPath" category="output" label="Default path" kind="string"/>
+    <property name="description" category="output" label="Description" kind="string"/>
+    <property name="owner" category="output" label="Owner" kind="string"/>
+    <property name="projectNumber" category="output" label="Project number" kind="string"/>
+    <property name="refNumber" category="output" label="Ref number" kind="string"/>
+    <property name="release" category="output" label="Release" kind="string"/>
+    <property name="stream" category="output" label="Stream" kind="string"/>
+    <property name="userTag" category="output" label="User tag" kind="string"/>
+  </type>
+
+  <type type="ispwServices.GetAssignmentTaskList" extends="ispwServices.PythonScript"
+        label="ISPW Assignments: Get Assignment Task List">
+    <property name="assignmentId" category="input" label="Assignment id" kind="string"/>
+    <property name="level" category="input" label="Level" kind="string" required="false"
+              description="Optional - All tasks in the assignment at this level will be displayed."/>
+
+    <property name="tasks" category="output" label="Tasks" kind="map_string_string"
+              description="A map containing all tasks. Key is the taskId, Value is a json string containing all fields."/>
+  </type>
+
+  <type type="ispwServices.GetAssignmentTaskInformation" extends="ispwServices.PythonScript"
+        label="ISPW Assignments: Get Assignment Task Information">
+    <property name="assignmentId" category="input" label="Assignment id" kind="string"/>
+    <property name="taskId" category="input" label="Task id" kind="string" required="true"
+              description="The task id you want information on."/>
+
+    <property name="action" category="output" label="Action" kind="string"/>
+    <property name="alternateName" category="output" label="Alternate name" kind="string"/>
+    <property name="application" category="output" label="Application" kind="string"/>
+    <property name="assignment" category="output" label="Assignment" kind="string"/>
+    <property name="baseVersion" category="output" label="Base version" kind="integer"/>
+    <property name="cics" category="output" label="Cics" kind="boolean"/>
+    <property name="clazz" category="output" label="Clazz" kind="string"/>
+    <property name="dateTime" category="output" label="Datetime" kind="string"/>
+    <property name="environment" category="output" label="Environment" kind="string"/>
+    <property name="extension" category="output" label="Extension" kind="string"/>
+    <property name="flags" category="output" label="Flags" kind="string"/>
+    <property name="ims" category="output" label="IMS" kind="boolean"/>
+    <property name="internalVersion" category="output" label="Internal version" kind="integer"/>
+    <property name="level" category="output" label="Level" kind="string"/>
+    <property name="message" category="output" label="Message" kind="string"/>
+    <property name="operation" category="output" label="Operation" kind="string"/>
+    <property name="path" category="output" label="Path" kind="string"/>
+    <property name="program" category="output" label="Program" kind="boolean"/>
+    <property name="release" category="output" label="Release" kind="string"/>
+    <property name="replaceVersion" category="output" label="Replace version" kind="integer"/>
+    <property name="set" category="output" label="Set" kind="string"/>
+    <property name="sql" category="output" label="SQL" kind="boolean"/>
+    <property name="status" category="output" label="Status" kind="string"/>
+    <property name="stream" category="output" label="Stream" kind="string"/>
+    <property name="taskOutputId" category="output" label="Task id" kind="string"/>
+    <property name="taskType" category="output" label="Type" kind="string"/>
+    <property name="userId" category="output" label="User id" kind="string"/>
+    <property name="version" category="output" label="Version" kind="integer"/>
+    <property name="memberName" category="output" label="Member name" kind="string"/>
+  </type>
+
+  <type type="ispwServices.GenerateTasksInAssignment" extends="ispwServices.Action"
+        label="ISPW Assignments: Generate Tasks in Assignment">
+    <property name="assignmentId" category="input" label="Assignment id" kind="string"/>
+    <property name="level" category="input" label="Level" kind="string" required="false"
+              description="Optional -All tasks in the assignment at this level will be generated."/>
+    <property name="autoDeploy" category="input" label="Auto Deploy" kind="boolean" required="false"
+              description="Promotes can be set up to automatically Deploy as well by an option set up by the ISPW Administrator"/>
+
+    <property name="setId" category="output" label="Set id" kind="string"/>
+    <property name="url" category="output" label="Url" kind="string"/>
+  </type>
+
+  <type type="ispwServices.PromoteAssignment" extends="ispwServices.Action" label="ISPW Assignments: Promote Assignment">
+    <property name="assignmentId" category="input" label="Assignment id" kind="string"/>
+    <property name="level" category="input" label="Level" kind="string"
+              description="All tasks in the assignment at this level will be promoted."/>
+    <property name="changeType" category="input" label="Change Type" kind="string" default="S"
+              description="Optional, S for standard, I for incidental, or E for emergency. Default value of S"
+              required="false"/>
+    <property name="executionStatus" category="input" label="Execution Status" kind="string" default="I"
+              description="Optional, I for immediate execution or at start date/time, H to create request in hold. Default is I"
+              required="false"/>
+    <property name="override" category="input" label="Override" kind="boolean" required="false" default="true"
+              description="Allow to override a higher version in next level when promote"/>
+    <property name="autoDeploy" category="input" label="Auto Deploy" kind="boolean" required="false"
+              description="Promotes can be set up to automatically Deploy as well by an option set up by the ISPW Administrator"/>
+
+    <property name="setId" category="output" label="Set id" kind="string"/>
+    <property name="url" category="output" label="Url" kind="string"/>
+
+  </type>
+
+  <type type="ispwServices.DeployAssignment" extends="ispwServices.Action" label="ISPW Assignments: Deploy Assignment">
+    <property name="assignmentId" category="input" label="Assignment id" kind="string"/>
+    <property name="level" category="input" label="Level" kind="string"
+              description="All tasks in the assignment at this level will be deployed."/>
+    <property name="changeType" category="input" label="Change Type" kind="string" default="S"
+              description="Optional, S for standard, I for incidental, or E for emergency. Default value of S"
+              required="false"/>
+    <property name="executionStatus" category="input" label="Execution Status" kind="string" default="I"
+              description="Optional, I for immediate execution or at start date/time, H to create request in hold. Default is I"
+              required="false"/>
+    <property name="dpenvlst" category="input" label="DPENVLST parameter" kind="string"
+              description="The DPENVLST parameter allows you to override the Environments configured for Deploy at that level. If you wish to Deploy to only certain Environments, you can list them here, separated by a space. The length of the field is limited to 80."
+              required="false"/>
+    <property name="system" category="input" label="System" kind="string"
+              description="Allows you to specify a specific System for the Deploy"
+              required="false"/>
+
+    <property name="setId" category="output" label="Set id" kind="string"/>
+    <property name="url" category="output" label="Url" kind="string"/>
+  </type>
+
+  <type type="ispwServices.RegressAssignment" extends="ispwServices.Action" label="ISPW Assignments: Regress Assignment">
+    <property name="assignmentId" category="input" label="Assignment id" kind="string"/>
+    <property name="level" category="input" label="Level" kind="string"
+              description="All tasks in the assignment at this level will be regressed."/>
+    <property name="changeType" category="input" label="Change Type" kind="string" default="S"
+              description="Optional, S for standard, I for incidental, or E for emergency. Default value of S"
+              required="false"/>
+    <property name="executionStatus" category="input" label="Execution Status" kind="string" default="I"
+              description="Optional, I for immediate execution or at start date/time, H to create request in hold. Default is I"
+              required="false"/>
+
+    <property name="setId" category="output" label="Set id" kind="string"/>
+    <property name="url" category="output" label="Url" kind="string"/>
+
+  </type>
+
+  <!-- Releases -->
+  <type type="ispwServices.CreateRelease" extends="ispwServices.PythonScript" label="ISPW Releases: Create Release">
+    <property name="application" category="input" label="Application" kind="string"/>
+    <property name="stream" category="input" label="Stream" kind="string"/>
+    <property name="description" category="input" label="Release description" kind="string"/>
+    <property name="relId" category="input" label="Release id" kind="string"
+              description="8 character value, can only be used if Release prefix is not set"
+              required="false"/>
+    <property name="relPrefix" category="input" label="Release prefix" kind="string"
+              description="8 character value, can only be used if Release id is not set"
+              required="false"/>
+    <property name="owner" category="input" label="Owner" kind="string" required="false"/>
+    <property name="referenceNumber" category="input" label="Reference Number" kind="string" required="false"/>
+
+    <property name="relOutputId" category="output" label="Release id" kind="string"/>
+    <property name="url" category="output" label="Url" kind="string"/>
+  </type>
+
+  <type type="ispwServices.GetReleaseInformation" extends="ispwServices.PythonScript"
+        label="ISPW Releases: Get Release Information">
+    <property name="relId" category="input" label="Release id" kind="string"
+              description="8 character value, the release ID you want information on."
+              required="true"/>
+
+    <property name="relOutputId" category="output" label="Release id" kind="string"/>
+    <property name="application" category="output" label="Application" kind="string"/>
+    <property name="stream" category="output" label="Stream" kind="string"/>
+    <property name="description" category="output" label="Release description" kind="string"/>
+    <property name="owner" category="output" label="Owner" kind="string"/>
+    <property name="referenceNumber" category="output" label="Reference Number" kind="string"/>
+  </type>
+
+  <type type="ispwServices.GetReleaseTaskList" extends="ispwServices.PythonScript"
+        label="ISPW Releases: Get Release Task List">
+    <property name="relId" category="input" label="Release id" kind="string"
+              description="8 character value, the release ID you want information on."
+              required="true"/>
+    <property name="level" category="input" label="Level" kind="string" required="false"
+              description="Optional - All tasks in the release at this level will be displayed."/>
+
+    <property name="tasks" category="output" label="Tasks" kind="map_string_string"
+              description="A map containing all tasks. Key is the taskId, Value is a json string containing all fields."/>
+  </type>
+
+  <type type="ispwServices.GetReleaseTaskInformation" extends="ispwServices.PythonScript"
+        label="ISPW Releases: Get Release Task Information">
+    <property name="relId" category="input" label="Release id" kind="string"
+              description="8 character value, the release ID you want information on."
+              required="true"/>
+    <property name="taskId" category="input" label="Task id" kind="string" required="true"
+              description="The task id you want information on."/>
+
+    <property name="action" category="output" label="Action" kind="string"/>
+    <property name="alternateName" category="output" label="Alternate name" kind="string"/>
+    <property name="application" category="output" label="Application" kind="string"/>
+    <property name="container" category="output" label="Container" kind="string"/>
+    <property name="baseVersion" category="output" label="Base version" kind="integer"/>
+    <property name="cics" category="output" label="Cics" kind="boolean"/>
+    <property name="clazz" category="output" label="Clazz" kind="string"/>
+    <property name="dateTime" category="output" label="Datetime" kind="string"/>
+    <property name="environment" category="output" label="Environment" kind="string"/>
+    <property name="extension" category="output" label="Extension" kind="string"/>
+    <property name="flags" category="output" label="Flags" kind="string"/>
+    <property name="ims" category="output" label="IMS" kind="boolean"/>
+    <property name="internalVersion" category="output" label="Internal version" kind="integer"/>
+    <property name="level" category="output" label="Level" kind="string"/>
+    <property name="message" category="output" label="Message" kind="string"/>
+    <property name="operation" category="output" label="Operation" kind="string"/>
+    <property name="path" category="output" label="Path" kind="string"/>
+    <property name="program" category="output" label="Program" kind="boolean"/>
+    <property name="release" category="output" label="Release" kind="string"/>
+    <property name="replaceVersion" category="output" label="Replace version" kind="integer"/>
+    <property name="set" category="output" label="Set" kind="string"/>
+    <property name="sql" category="output" label="SQL" kind="boolean"/>
+    <property name="status" category="output" label="Status" kind="string"/>
+    <property name="stream" category="output" label="Stream" kind="string"/>
+    <property name="taskOutputId" category="output" label="Task id" kind="string"/>
+    <property name="taskType" category="output" label="Type" kind="string"/>
+    <property name="userId" category="output" label="User id" kind="string"/>
+    <property name="version" category="output" label="Version" kind="integer"/>
+    <property name="memberName" category="output" label="Member name" kind="string"/>
+  </type>
+
+  <type type="ispwServices.GenerateTasksInRelease" extends="ispwServices.Action"
+        label="ISPW Releases: Generate Tasks in Release">
+    <property name="relId" category="input" label="Release id" kind="string"
+              description="8 character value, the release ID to generate tasks for."
+              required="true"/>
+    <property name="level" category="input" label="Level" kind="string" required="false"
+              description="Optional -All tasks in the release at this level will be generated."/>
+    <property name="autoDeploy" category="input" label="Auto Deploy" kind="boolean" required="false"
+              description="Promotes can be set up to automatically Deploy as well by an option set up by the ISPW Administrator"/>
+
+    <property name="setId" category="output" label="Set id" kind="string"/>
+    <property name="url" category="output" label="Url" kind="string"/>
+  </type>
+
+  <type type="ispwServices.GetReleaseTaskGenerateListing" extends="ispwServices.Action"
+        label="ISPW Releases: Get Release Task Generate Listing">
+    <property name="relId" category="input" label="Release id" kind="string"
+              description="8 character value, the release ID to get the listing for."
+              required="true"/>
+    <property name="taskId" category="input" label="Task id" kind="string" required="true"
+              description="The task id you want information on."/>
+
+    <property name="listing" category="output" label="Listing" kind="string"/>
+  </type>
+
+  <type type="ispwServices.Promote" extends="ispwServices.Action" label="ISPW Releases: Promote Release">
+    <property name="relId" category="input" label="Release id" kind="string"
+              description="8 character value, The Release you intend to promote."/>
+    <property name="level" category="input" label="Level" kind="string"
+              description="All tasks in the release at this level will be promoted."/>
+    <property name="changeType" category="input" label="Change Type" kind="string" default="S"
+              description="Optional, S for standard, I for incidental, or E for emergency. Default value of S"
+              required="false"/>
+    <property name="executionStatus" category="input" label="Execution Status" kind="string" default="I"
+              description="Optional, I for immediate execution or at start date/time, H to create request in hold. Default is I"
+              required="false"/>
+    <property name="override" category="input" label="Override" kind="boolean" required="false" default="true"
+              description="Allow to override a higher version in next level when promote"/>
+    <property name="autoDeploy" category="input" label="Auto Deploy" kind="boolean" required="false"
+              description="Promotes can be set up to automatically Deploy as well by an option set up by the ISPW Administrator"/>
+
+    <property name="setId" category="output" label="Set id" kind="string"/>
+    <property name="url" category="output" label="Url" kind="string"/>
+
+  </type>
+
+  <type type="ispwServices.Deploy" extends="ispwServices.Action" label="ISPW Releases: Deploy Release">
+    <property name="relId" category="input" label="Release id" kind="string" description="8 character value"/>
+    <property name="level" category="input" label="Level" kind="string"
+              description="All tasks in the release at this level will be deployed."/>
+    <property name="changeType" category="input" label="Change Type" kind="string" default="S"
+              description="Optional, S for standard, I for incidental, or E for emergency. Default value of S"
+              required="false"/>
+    <property name="executionStatus" category="input" label="Execution Status" kind="string" default="I"
+              description="Optional, I for immediate execution or at start date/time, H to create request in hold. Default is I"
+              required="false"/>
+    <property name="dpenvlst" category="input" label="DPENVLST parameter" kind="string"
+              description="The DPENVLST parameter allows you to override the Environments configured for Deploy at that level. If you wish to Deploy to only certain Environments, you can list them here, separated by a space. The length of the field is limited to 80."
+              required="false"/>
+    <property name="system" category="input" label="System" kind="string"
+              description="Allows you to specify a specific System for the Deploy"
+              required="false"/>
+
+    <property name="setId" category="output" label="Set id" kind="string"/>
+    <property name="url" category="output" label="Url" kind="string"/>
+  </type>
+
+  <type type="ispwServices.Regress" extends="ispwServices.Action" label="ISPW Releases: Regress Release">
+    <property name="relId" category="input" label="Release id" kind="string"
+              description="The Release you intend to regress."/>
+    <property name="level" category="input" label="Level" kind="string"
+              description="All tasks in the release at this level will be regressed."/>
+    <property name="changeType" category="input" label="Change Type" kind="string" default="S"
+              description="Optional, S for standard, I for incidental, or E for emergency. Default value of S"
+              required="false"/>
+    <property name="executionStatus" category="input" label="Execution Status" kind="string" default="I"
+              description="Optional, I for immediate execution or at start date/time, H to create request in hold. Default is I"
+              required="false"/>
+
+    <property name="setId" category="output" label="Set id" kind="string"/>
+    <property name="url" category="output" label="Url" kind="string"/>
+
+  </type>
+
+  <!-- ISPW Sets -->
+  <type type="ispwServices.GetSetInformation" extends="ispwServices.PythonScript"
+        label="ISPW Sets: Get Set Information">
+    <property name="setId" category="input" label="Set id" kind="string"
+              description="The set ID you want information about" required="true"/>
+
+    <property name="setOutputId" category="output" label="Set id" kind="string"/>
+    <property name="application" category="output" label="Application" kind="string"/>
+    <property name="stream" category="output" label="Stream" kind="string"/>
+    <property name="description" category="output" label="Release description" kind="string"/>
+    <property name="owner" category="output" label="Owner" kind="string"/>
+    <property name="startDate" category="output" label="Start Date" kind="string"/>
+    <property name="startTime" category="output" label="Start Time" kind="string"/>
+    <property name="deployActivationDate" category="output" label="Deploy Activation Date" kind="string"/>
+    <property name="deployActivationTime" category="output" label="Deploy Activation Time" kind="string"/>
+    <property name="deployImplementationDate" category="output" label="Deploy Implementation Date" kind="string"/>
+    <property name="deployImplementationTime" category="output" label="Deploy Implementation Time" kind="string"/>
+    <property name="state" category="output" label="State" kind="string"/>
+  </type>
+
+  <type type="ispwServices.PollGetSetInformation" extends="ispwServices.Poll"
+        label="ISPW Sets: Poll 'Get Set Information'">
+        
+    <property name="statusFieldName" category="input" kind="string"
+              description="The field returned by the server that should be inspected for status value" 
+              required="true" default="state"/>
+
+    <property name="setId" category="input" label="Set id" kind="string"
+              description="The set ID you want information about" required="true"/>
+  </type>
+
+  <type type="ispwServices.GetSetTaskList" extends="ispwServices.PythonScript"
+        label="ISPW Sets: Get Set Task List">
+    <property name="setId" category="input" label="Set id" kind="string"
+              description="The set ID you want information on" required="true"/>
+
+    <property name="tasks" category="output" label="Tasks" kind="map_string_string"
+              description="A map containing all tasks. Key is the taskId, Value is a json string containing all fields."/>
+  </type>
+
+  <type type="ispwServices.GetSetDeploymentInformation" extends="ispwServices.PythonScript"
+        label="ISPW Sets: Get Set Deployment Information">
+    <property name="setId" category="input" label="Set id" kind="string"
+              description="The set ID you want deployment information on" required="true"/>
+
+    <property name="createDate" category="output" label="Creation Date" kind="string"/>
+    <property name="description" category="output" label="Release description" kind="string"/>
+    <property name="environment" category="output" label="Environment" kind="string"/>
+    <property name="packages" category="output" label="Packages" kind="map_string_string"/>
+    <property name="requestId" category="output" label="Request id" kind="integer"/>
+    <property name="setOutputId" category="output" label="Set id" kind="string"/>
+    <property name="state" category="output" label="State" kind="string"/>
+  </type>
+
+  <type type="ispwServices.PollGetSetDeploymentInformation" extends="ispwServices.Poll"
+        label="ISPW Sets: Poll 'Get Set Deployment Information'">
+        
+    <property name="statusFieldName" category="input" kind="string"
+              description="The field returned by the server that should be inspected for status value" 
+              required="true" default="status"/>
+
+    <property name="setId" category="input" label="Set id" kind="string"
+              description="The set ID you want deployment information on" required="true"/>
+  </type>
+
+  <type type="ispwServices.FallbackSet" extends="ispwServices.Action"
+        label="ISPW Sets: Fallback set">
+    <property name="setId" category="input" label="Set id" kind="string"
+              description="The set ID you want deployment information on" required="true"/>
+    <property name="changeType" category="input" label="Change Type" kind="string" default="S"
+              description="Optional, S for standard, I for incidental, or E for emergency. Default value of S"
+              required="false"/>
+    <property name="executionStatus" category="input" label="Execution Status" kind="string" default="I"
+              description="Optional, I for immediate execution or at start date/time, H to create request in hold. Default is I"
+              required="false"/>
+
+    <property name="setOutputId" category="output" label="Set id" kind="string"/>
+    <property name="url" category="output" label="Url" kind="string"/>
+  </type>
+
+  <!-- Tiles -->
+  <type type="ispwServices.ISPWTile" description="Information about ISPW Plugin Tasks" label="ISPW Summary Tile" extends="xlrelease.Tile">
+    <property default="release" hidden="true" name="supportedScopes" kind="list_of_string"/>
+    <property name="uri" hidden="true" default="include/ISPWServicesTile/ispw-tile-view.html"/>
+    <property name="title" description="Tile title" default="ISPW Services Summary"/>
+    <property name="description" default="Information about ISPW Services Tasks"/>
+    <property name="detailsUri" hidden="true" default="include/ISPWServicesTile/ispw-tile-details.html"/>
+    <property name="embedded" kind="boolean" hidden="true" default="true"
+              required="false"/>
+
+    <property category="input" name="action" required="false" 
+              description="Optional: If you wish to display only tasks of a certain type, enter the task type here. Some possible values are Deploy, Promote, CreateRelease, PromoteAssignment. You can enter a string followed by an asterisk to filter for an included string rather than an exact type match. Example: Deploy* If you wish to display all ispw tasks, leave this field empty."/>
+  </type>
+
+</synthetic>

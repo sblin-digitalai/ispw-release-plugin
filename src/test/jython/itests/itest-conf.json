@@ -1,0 +1,7 @@
+[{
+    "name" : "ispw_server",
+    "url" : "http://172.17.0.1:28080",
+    "cesToken" : "12345678-abcd-efgh-12345678",
+    "proxyHost": "",
+    "enableSslVerification": false
+}]
