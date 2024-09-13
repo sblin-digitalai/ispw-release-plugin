@@ -218,22 +218,40 @@ class ISPWClient(object):
             retryLimit=variables['retryLimit'])
         result = json.loads(result)
         for key, value in result.iteritems():
-            if key == '':
+            if key == 'containerId':
                 variables['containerId'] = value
-            elif key == '':
+            elif key == 'numberOfErrors':
                 variables['numberOfErrors'] = value
-            elif key == '':
+            elif key == 'numberOfInfos':
                 variables['numberOfInfos'] = value
-            elif key == '':
+            elif key == 'numberOfTasksAnalyzed':
                 variables['numberOfTasksAnalyzed'] = value
-            elif key == '':
+            elif key == 'numberOfWarnings':
                 variables['numberOfWarnings'] = value
-            elif key == '':
+            elif key == 'timeOfAnalysis':
                 variables['timeOfAnalysis'] = value
-            elif key == '':
+            elif key == 'message':
                 variables['message'] = value
             else:
                 variables[key] = value
+    
+    def ispwservices_fallbackrelease(self, variables):
+        result = self.release_client.fallback_release(
+            srid=variables['srid'],
+            relId=variables['relId'],
+            retryInterval=variables['retryInterval'],
+            retryLimit=variables['retryLimit'])
+        result = json.loads(result)
+        for key, value in result.iteritems():
+            if key == 'setId':
+                variables['setId'] = value
+            elif key == 'message':
+                variables['message'] = value
+            elif key == 'url':
+                variables['url'] = value
+            else:
+                variables[key] = value
+
 
     def ispwservices_generatetasksinrelease(self, variables):
         result = self.release_client.generate_tasks_in_release(srid=variables['srid'], release_id=variables['relId'],

@@ -369,6 +369,15 @@ The numbers of warnings that ISPW found during the promotion analysis."/>
             description="The date and time the promotion analysis was executed."/>
   </type>
 
+  <type type="ispwServices.FallbackRelease" extends="ispwServices.PythonScript" label="ISPW Releases: Fallback a release">
+    <property name="relId" category="input" label="Release id" kind="string"
+              description="8 character value, the release ID to analyse."
+              required="true"/>
+    <property name="setId" category="output" label="Set id" kind="string"/>
+    <property name="message" category="output" label="Error message" kind="string"/>
+    <property name="url" category="output" label="HTTP URI" kind="string"/>
+  </type>
+
   <type type="ispwServices.Promote" extends="ispwServices.Action" label="ISPW Releases: Promote Release">
     <property name="relId" category="input" label="Release id" kind="string"
               description="8 character value, The Release you intend to promote."/>
