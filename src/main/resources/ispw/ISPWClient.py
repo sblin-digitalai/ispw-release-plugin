@@ -210,6 +210,31 @@ class ISPWClient(object):
             else:
                 variables[key] = value
 
+    def ispwservices_promotionanalysis(self, variables):
+        result = self.release_client.promotion_analysis(
+            srid=variables['srid'],
+            release_id=variables['relId'],
+            retryInterval=variables['retryInterval'],
+            retryLimit=variables['retryLimit'])
+        result = json.loads(result)
+        for key, value in result.iteritems():
+            if key == '':
+                variables['containerId'] = value
+            elif key == '':
+                variables['numberOfErrors'] = value
+            elif key == '':
+                variables['numberOfInfos'] = value
+            elif key == '':
+                variables['numberOfTasksAnalyzed'] = value
+            elif key == '':
+                variables['numberOfWarnings'] = value
+            elif key == '':
+                variables['timeOfAnalysis'] = value
+            elif key == '':
+                variables['message'] = value
+            else:
+                variables[key] = value
+
     def ispwservices_generatetasksinrelease(self, variables):
         result = self.release_client.generate_tasks_in_release(srid=variables['srid'], release_id=variables['relId'],
                                                                level=variables['level'],

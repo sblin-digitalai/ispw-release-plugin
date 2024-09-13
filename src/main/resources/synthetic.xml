@@ -347,6 +347,28 @@
     <property name="listing" category="output" label="Listing" kind="string"/>
   </type>
 
+  <type type="ispwServices.PromotionAnalysis" extends="ispwServices.PythonScript" label="ISPW Releases: Promotion Analysis">
+    <property name="relId" category="input" label="Release id" kind="string"
+              description="8 character value, the release ID to analyse."
+              required="true"/>
+    <property name="containerId" category="output" label="Container id" kind="string"
+            description="
+The name of the container where promotion analysis was executed."/>
+    <property name="message" category="output" label="Error message" kind="string"
+            description="The error message returned if promotion analysis could not be executed."/>
+    <property name="numberOfErrors" category="output" label="Number of errors" kind="string"
+            description="The numbers of errors that ISPW found during the promotion analysis."/>
+    <property name="numberOfInfos" category="output" label="Number of informational messages" kind="string"
+            description="The numbers of informational messages that ISPW found during the promotion analysis."/>
+    <property name="numberOfTasksAnalyzed" category="output" label="Number of tasks analysed" kind="string"
+            description="The total number of tasks that were analyzed as part of promotion analysis."/>
+    <property name="numberOfWarnings" category="output" label="Number of warnings" kind="string"
+            description="
+The numbers of warnings that ISPW found during the promotion analysis."/>
+    <property name="timeOfAnalysis" category="output" label="Date and time analysis was executed" kind="string"
+            description="The date and time the promotion analysis was executed."/>
+  </type>
+
   <type type="ispwServices.Promote" extends="ispwServices.Action" label="ISPW Releases: Promote Release">
     <property name="relId" category="input" label="Release id" kind="string"
               description="8 character value, The Release you intend to promote."/>

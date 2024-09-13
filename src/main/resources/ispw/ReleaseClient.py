@@ -78,6 +78,21 @@ class ReleaseClient(HttpClient):
                 print("Call for 'get release task information' returned 409(conflict), trying again - %s" % str(x+1))
 
         return response.getResponse()
+    
+    def promotion_analysis(self, srid, release_id, retryInterval, retryLimit):
+        context_root = "/ispw/%s/releases/%s/tasks/promotionAnalysis" % (srid, release_id)
+        body = {}
+        if retryLimit == 0: retryLimit = 1
+        for x in range(retryLimit):
+            response = self._post_request(context_root, json.dumps(body),
+                                        {'Accept': 'application/json', 'Content-type': 'application/json'})
+            if check_response(response, retryInterval, (x >= retryLimit-1), srid, "get release task information"):
+                break
+            else:
+                print("Call for 'promotion analysis' returned 409(conflict), trying again - %s" % str(x+1))
+
+        return response.getResponse()
+
 
 
     def generate_tasks_in_release(self, srid, release_id, level, runtime_configuration, auto_deploy, callback_task_id,
