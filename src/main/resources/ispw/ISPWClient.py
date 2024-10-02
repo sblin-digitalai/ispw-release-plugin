@@ -295,6 +295,19 @@ class ISPWClient(object):
         variables['setId'] = result["setId"]
         variables['url'] = result["url"]
 
+    def ispwservices_promotesimple(self, variables):
+        result = self.release_client.promotesimple(srid=variables['srid'], release_id=variables['relId'],
+                                             level=variables['level'],
+                                             change_type=variables['changeType'],
+                                             execution_status=variables['executionStatus'],
+                                             override=variables['override'],
+                                             auto_deploy=variables['autoDeploy'],
+                                             retryInterval=variables['retryInterval'],
+                                             retryLimit=variables['retryLimit'])
+        result = json.loads(result)
+        variables['setId'] = result["setId"]
+        variables['url'] = result["url"]
+
     def ispwservices_deploy(self, variables):
         result = self.release_client.deploy(srid=variables['srid'], release_id=variables['relId'],
                                             level=variables['level'],

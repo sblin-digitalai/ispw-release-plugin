@@ -185,6 +185,27 @@ class ReleaseClient(HttpClient):
 
         return response.getResponse()
 
+
+    def promotesimple(self, srid, release_id, level, change_type, execution_status, override, auto_deploy,
+                retryInterval, retryLimit):
+        context_root = "/ispw/%s/releases/%s/tasks/promote?level=%s" % (srid, release_id, level)
+        body = {'changeType': change_type, 'executionStatus': execution_status,
+                'override': override,
+                'autoDeploy': auto_deploy,
+                'httpHeaders': [{'name': 'Content-type', 'value': 'application/json'}]}
+
+        if retryLimit == 0: retryLimit = 1
+        for x in range(retryLimit):
+            response = self._post_request(context_root, json.dumps(body),
+                                        {'Accept': 'application/json', 'Content-type': 'application/json'})
+
+            if check_response(response, retryInterval, (x >= retryLimit-1), srid, "promote release"):
+                break
+            else:
+                print("Call for 'promote release' returned 409(conflict), trying again - %s" % str(x+1))
+
+        return response.getResponse()
+    
     def deploy(self, srid, release_id, level, change_type, execution_status, runtime_configuration, dpenvlst, system,
                callback_task_id, callback_url, callback_username, callback_password, retryInterval, retryLimit):
         context_root = "/ispw/%s/releases/%s/tasks/deploy?level=%s" % (srid, release_id, level)
