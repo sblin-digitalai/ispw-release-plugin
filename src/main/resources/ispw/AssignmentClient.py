@@ -38,7 +38,7 @@ class AssignmentClient(HttpClient):
             else:
                 print("Call for 'create assignment' returned 409(conflict), trying again - %s" % str(x+1))
 
-        return response.getContent()
+        return response.getResponse()
 
 
     def load_task(self, srid, assignment_id, stream, application, module_name, module_type, current_level, starting_level,

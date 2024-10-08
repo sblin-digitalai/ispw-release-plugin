@@ -44,9 +44,10 @@ class SetClient(HttpClient):
             interval = int(poll_interval)
             if pollingCount > 0: time.sleep(interval)
             data = self.get_set_information(srid, set_id, 0, 0)
+            data = json.loads(data)
             if data is None:
                 logger.debug("Polling - Failed to get set info for id [%s]. " % (srid))
-            else: 
+            else:
                 if data[status_field_name]:
                     statusValue = data[status_field_name]
                     if statusValue in expected_status_list:
@@ -55,6 +56,7 @@ class SetClient(HttpClient):
         if pollingCount >= poll_timeout_count and not foundExpectedValue:
             print("Polling count exceeded configured limit of %s. Last status retrieved - %s" % (poll_timeout_count, statusValue))
             sys.exit(1)
+
         return {'status': statusValue}
 
 
@@ -83,7 +85,7 @@ class SetClient(HttpClient):
                 break
             else:
                 print("Call for 'get set deployment information' returned 409(conflict), trying again - %s" % str(x+1))
-        return response.json()
+        return response.getResponse()
 
     def poll_get_set_deployment_information(self, srid, set_id, poll_interval, poll_timeout_count, status_field_name, expected_status_list):
         logger.debug("pollGetSetDeploymentInfo - srid = %s, set_id = %s, poll_interval = %s, poll_timeout_count = %s, status_field_name = %s, _list = %s," % 
@@ -99,6 +101,7 @@ class SetClient(HttpClient):
             if data is None:
                 logger.debug("Polling - Failed to get set deploy info for id [%s]. " % (srid))
             else: 
+                data = json.loads(data)
                 if data[status_field_name]:
                     statusValue = data[status_field_name]
                     if statusValue in expected_status_list:
@@ -108,7 +111,7 @@ class SetClient(HttpClient):
             print("Polling count exceeded configured limit of %s. Last status retrieved - %s" % (poll_timeout_count, statusValue))
             sys.exit(1)
         return {'status': statusValue}
-
+    
     def fallback_set(self, srid, set_id, change_type, execution_status, runtime_configuration, callback_task_id,
                      callback_url, callback_username, callback_password, retryInterval, retryLimit):
         context_root = "/ispw/%s/sets/%s/tasks/fallback" % (srid, set_id)

@@ -186,6 +186,38 @@ class ReleaseClient(HttpClient):
         return response.getResponse()
 
 
+    def close(self, srid, release_id, change_type, execution_status, runtime_configuration, override, auto_deploy,
+                    callback_task_id,
+                    callback_url, callback_username, callback_password, retryInterval, retryLimit):
+            context_root = "/ispw/%s/releases/%s/close" % (srid, release_id)
+            body = {'changeType': change_type, 'executionStatus': execution_status,
+                    'runtimeConfiguration': runtime_configuration,
+                    'override': override,
+                    'autoDeploy': auto_deploy,
+                    'httpHeaders': [{'name': 'Content-type', 'value': 'application/json'}],
+                    'credentials': {'username': callback_username, 'password': callback_password}, 'events': [
+                    {"name": "completed", "url": "%s/api/v1/tasks/%s/complete" % (callback_url, callback_task_id),
+                    "body": "{\"comment\":\"Promotion completed by ISPW\"}"},
+                    {"name": "failed", "url": "%s/api/v1/tasks/%s/fail" % (callback_url, callback_task_id),
+                    "body": "{\"comment\":\"Promotion failed by ISPW\"}"},
+                    {"name": "terminated", "url": "%s/api/v1/tasks/%s/fail" % (callback_url, callback_task_id),
+                    "body": "{\"comment\":\"Promotion terminated by ISPW\"}"},
+                    {"name": "deleted", "url": "%s/api/v1/tasks/%s/fail" % (callback_url, callback_task_id),
+                    "body": "{\"comment\":\"Promotion deleted by ISPW\"}"}]}
+
+            if retryLimit == 0: retryLimit = 1
+            for x in range(retryLimit):
+                response = self._post_request(context_root, json.dumps(body),
+                                            {'Accept': 'application/json', 'Content-type': 'application/json'})
+
+                if check_response(response, retryInterval, (x >= retryLimit-1), srid, "promote release"):
+                    break
+                else:
+                    print("Call for 'close release' returned 409(conflict), trying again - %s" % str(x+1))
+
+            return response.getResponse()
+
+
     def promotesimple(self, srid, release_id, level, change_type, execution_status, override, auto_deploy,
                 retryInterval, retryLimit):
         context_root = "/ispw/%s/releases/%s/tasks/promote?level=%s" % (srid, release_id, level)
