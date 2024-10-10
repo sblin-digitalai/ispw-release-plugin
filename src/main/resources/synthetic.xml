@@ -551,6 +551,27 @@ The numbers of warnings that ISPW found during the promotion analysis."/>
     <property name="url" category="output" label="Url" kind="string"/>
   </type>
 
+
+  <!-- Containers -->
+  <type type="ispwServices.ContainersList" extends="ispwServices.PythonScript"
+        label="ISPW Containers: List Containers">
+    <property name="userId" category="input" label="User id" kind="string" required="false"/>
+    <property name="containerId" category="input" label="Container id" kind="string" required="false"/>
+    <property name="containerType" category="input" label="Container type" kind="string" default="R"
+              description="Optional, A=Assignment, R=Release, S=Set" required="false"/>
+    <property name="application" category="input" label="Application" kind="string" required="false"/>
+    <property name="owner" category="input" label="Owner" kind="string" required="false"/>
+    <property name="description" category="input" label="Container description" kind="string" required="false"/>
+    <property name="refNumber" category="input" label="Reference number" kind="string" required="false"/>
+    <property name="releaseId" category="input" label="Release id" kind="string" required="false"/>
+    <property name="stream" category="input" label="Stream" kind="string" required="false"/>
+    <property name="defaultPath" category="input" label="Default container path" kind="string" required="false"/>
+    <property name="userTag" category="input" label="User tag" kind="string" required="false"/>
+    <property name="includeClosedContainers" category="input" label="Include Closed Containers" kind="boolean"/>
+    <property name="message" category="output" label="Message" kind="string"/>
+    <property name="containers" category="output" label="Containers Ids" kind="set_of_string"/>
+  </type>
+
   <!-- Tiles -->
   <type type="ispwServices.ISPWTile" description="Information about ISPW Plugin Tasks" label="ISPW Summary Tile" extends="xlrelease.Tile">
     <property default="release" hidden="true" name="supportedScopes" kind="list_of_string"/>

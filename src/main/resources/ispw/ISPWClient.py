@@ -8,17 +8,22 @@
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 import json
+import logging
+from sets import Set
 from ispw.AssignmentClient import AssignmentClient
 from ispw.ReleaseClient import ReleaseClient
 from ispw.SetClient import SetClient
+from ispw.ContainerClient import ContainerClient
 from ispw.TestConnectionClient import TestConnectionClient
 
+logger = logging.getLogger(__name__)
 
 class ISPWClient(object):
     def __init__(self, http_connection, ces_token=None):
         self.set_client = SetClient(http_connection, ces_token)
         self.release_client = ReleaseClient(http_connection, ces_token)
         self.assignment_client = AssignmentClient(http_connection, ces_token)
+        self.container_client = ContainerClient(http_connection, ces_token)
         self.test_connection_client = TestConnectionClient(http_connection)
 
     @staticmethod
@@ -431,3 +436,27 @@ class ISPWClient(object):
         result = json.loads(result)
         variables['setOutputId'] = result["setId"]
         variables['url'] = result["url"]
+
+    def ispwservices_containerslist(self, variables):
+        result = self.container_client.get_container_list(srid=variables['srid'],
+                                                          userId=variables['userId'],
+                                                          containerId=variables['containerId'],
+                                                          containerType=variables['containerType'],
+                                                          application=variables['application'],
+                                                          owner=variables['owner'],
+                                                          description=variables['description'],
+                                                          refNumber=variables['refNumber'],
+                                                          releaseId=variables['releaseId'],
+                                                          stream=variables['stream'],
+                                                          defaultPath=variables['defaultPath'],
+                                                          tag=variables['userTag'],
+                                                          includeClosedContainers=variables['includeClosedContainers'],
+                                                          retryInterval=variables['retryInterval'],
+                                                          retryLimit=variables['retryLimit'])
+        result = json.loads(result)
+        variables['message'] = result['message']
+        containers = result['containers']
+        res = Set()
+        for c in containers:
+            res.add(c['containerId'])
+        variables['containers'] = res
