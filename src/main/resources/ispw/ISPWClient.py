@@ -239,6 +239,53 @@ class ISPWClient(object):
                 variables['message'] = value
             else:
                 variables[key] = value
+
+    def ispwservices_promotionanalysisbulk(self, variables):
+
+        srid = variables['srid']
+        relIds = variables['relIds']
+        retryInterval=variables['retryInterval']
+        retryLimit=variables['retryLimit']
+
+        containerIds = Set()
+        messages = {}
+        numberOfErrors={}
+        numberOfInfos={}
+        numberOfTasksAnalyzed={}
+        numberOfWarnings={}
+        timeOfAnalysis={}
+
+        for id in relIds:
+            result = self.release_client.promotion_analysis(
+                                srid,
+                                id,
+                                retryInterval,
+                                retryLimit)
+            result = json.loads(result)
+            containerIds.add(id)
+        
+            for key, value in result.iteritems():
+                if key == 'numberOfErrors':
+                    numberOfErrors[id] = value
+                elif key == 'numberOfInfos':
+                    numberOfInfos[id] = value
+                elif key == 'numberOfTasksAnalyzed':
+                    numberOfTasksAnalyzed[id] = value
+                elif key == 'numberOfWarnings':
+                    numberOfWarnings[id] = value
+                elif key == 'timeOfAnalysis':
+                    timeOfAnalysis[id] = value
+                elif key == 'message':
+                    messages[id] = value
+            
+        variables['containerIds'] = containerIds
+        variables['messages'] = messages
+        variables['numberOfErrors'] = numberOfErrors
+        variables['numberOfInfos'] = numberOfInfos
+        variables['numberOfTasksAnalyzed'] = numberOfTasksAnalyzed
+        variables['numberOfWarnings'] = numberOfWarnings
+        variables['timeOfAnalysis'] = timeOfAnalysis
+        
     
     def ispwservices_fallbackrelease(self, variables):
         result = self.release_client.fallback_release(

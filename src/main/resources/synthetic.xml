@@ -352,8 +352,7 @@
               description="8 character value, the release ID to analyse."
               required="true"/>
     <property name="containerId" category="output" label="Container id" kind="string"
-            description="
-The name of the container where promotion analysis was executed."/>
+            description="The name of the container where promotion analysis was executed."/>
     <property name="message" category="output" label="Error message" kind="string"
             description="The error message returned if promotion analysis could not be executed."/>
     <property name="numberOfErrors" category="output" label="Number of errors" kind="string"
@@ -363,10 +362,28 @@ The name of the container where promotion analysis was executed."/>
     <property name="numberOfTasksAnalyzed" category="output" label="Number of tasks analysed" kind="string"
             description="The total number of tasks that were analyzed as part of promotion analysis."/>
     <property name="numberOfWarnings" category="output" label="Number of warnings" kind="string"
-            description="
-The numbers of warnings that ISPW found during the promotion analysis."/>
+            description="The numbers of warnings that ISPW found during the promotion analysis."/>
     <property name="timeOfAnalysis" category="output" label="Date and time analysis was executed" kind="string"
             description="The date and time the promotion analysis was executed."/>
+  </type>
+
+  <type type="ispwServices.PromotionAnalysisBulk" extends="ispwServices.PythonScript" label="ISPW Releases: Promotion Analysis - Bulk">
+    <property name="relIds" category="input" label="Release ids" kind="set_of_string"
+              description="Set of release IDs to analyse." required="true"/>
+    <property name="containerIds" category="output" label="Container ids" kind="set_of_string"
+            description="The names of the releases where promotion analysis was executed."/>
+    <property name="messages" category="output" label="Error message" kind="map_string_string"
+            description="For each release Id, the error message returned if promotion analysis could not be executed."/>
+    <property name="numberOfErrors" category="output" label="Number of errors" kind="map_string_string"
+            description="For each release Id, the number of errors that ISPW found during the promotion analysis."/>
+    <property name="numberOfInfos" category="output" label="Number of informational messages" kind="map_string_string"
+            description="For each release Id, the number of informational messages that ISPW found during the promotion analysis."/>
+    <property name="numberOfTasksAnalyzed" category="output" label="Number of tasks analysed" kind="map_string_string"
+            description="For each release Id, the total number of tasks that were analyzed as part of promotion analysis."/>
+    <property name="numberOfWarnings" category="output" label="Number of warnings" kind="map_string_string"
+            description="For each release Id, the number of warnings that ISPW found during the promotion analysis."/>
+    <property name="timeOfAnalysis" category="output" label="Date and time analysis was executed" kind="map_string_string"
+            description="For each release Id, the date and time the promotion analysis was executed."/>
   </type>
 
   <type type="ispwServices.FallbackRelease" extends="ispwServices.PythonScript" label="ISPW Releases: Fallback a release">
