@@ -501,7 +501,9 @@ class ISPWClient(object):
                                                           retryInterval=variables['retryInterval'],
                                                           retryLimit=variables['retryLimit'])
         result = json.loads(result)
-        variables['message'] = result['message']
+        variables['message'] = ''
+        if result['message']:
+            variables['message'] = result['message']
         containers = result['containers']
         res = Set()
         for c in containers:
