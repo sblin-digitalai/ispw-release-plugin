@@ -585,7 +585,7 @@
     <property name="defaultPath" category="input" label="Default container path" kind="string" required="false"/>
     <property name="userTag" category="input" label="User tag" kind="string" required="false"/>
     <property name="includeClosedContainers" category="input" label="Include Closed Containers" kind="boolean"/>
-    <property name="message" category="output" label="Message" kind="string"/>
+    <!--<property name="message" category="output" label="Message" kind="string"/>-->
     <property name="containers" category="output" label="Containers Ids" kind="set_of_string"/>
   </type>
 
